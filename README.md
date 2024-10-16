@@ -1,7 +1,7 @@
 # AIReport_pic
-AIReport_pic是一款适用于chatgpt-on-wechat项目的新闻资讯类插件，调用天聚数行的API接口，通过html代码自动排版生成图文卡片形式的AI日报。
+AIReport_pic是一款适用于chatgpt-on-wechat项目的新闻资讯类插件，调用天聚数行的API接口，通过html自动渲染生成图文卡片形式的AI日报。
 
-该插件安装需要配置环境。
+该插件安装需要配置环境。具体的使用教程如下：
 
 ## 一. 安装Html渲染所必需的环境
 1. 安装playwright：在服务器终端执行以下命令 ：pip install playwright
@@ -26,4 +26,6 @@ AIReport_pic是一款适用于chatgpt-on-wechat项目的新闻资讯类插件，
 5.输入#help AIReport_txt查看帮助信息，返回以下信息则表示插件安装成功："输入“AI快讯”获取最新的AI相关资讯。"
 
 ## 四. 使用样例
-https://github.com/Lingyuzhou111/AIReport_pic/blob/main/example.png
+![example](https://github.com/user-attachments/assets/785cd57c-c304-4c60-92d8-ed75c59f0850)
+
+PS:手动修改AIReport_pic.py文件的第180行代码可自定义卡片下方的签名。
