@@ -24,12 +24,12 @@ class AIReport_pic(Plugin):
         logger.info(f"[{__class__.__name__}] initialized")
 
     def get_help_text(self, **kwargs):
-        return "输入“AIReport”获取最新的图片格式AI日报。"
+        return "输入“AI图文快讯”获取最新的图片格式AI日报。"
 
     def on_handle_context(self, e_context):
         if e_context['context'].type == ContextType.TEXT:
             content = e_context["context"].content.strip()
-            if content.startswith("AIReport"):
+            if content.startswith("AI图文快讯"):
                 logger.info(f"[{__class__.__name__}] 收到消息: {content}")
                 asyncio.run(self.fetch_ai_news(e_context))
 
