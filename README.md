@@ -1,0 +1,2 @@
+# AIReport_pic
+AIReport_pic是一款适用于chatgpt-on-wechat项目的新闻资讯类插件，调用天聚数行的API接口，通过html代码自动排版生成图文卡片形式的AI日报。
