@@ -26,4 +26,4 @@ AIReport_pic是一款适用于chatgpt-on-wechat项目的新闻资讯类插件，
 5.输入#help AIReport_txt查看帮助信息，返回以下信息则表示插件安装成功："输入“AI快讯”获取最新的AI相关资讯。"
 
 ## 四. 使用样例
-
+https://github.com/Lingyuzhou111/AIReport_pic/blob/main/example.png
