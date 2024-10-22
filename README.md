@@ -23,9 +23,9 @@ AIReport_pic是一款适用于chatgpt-on-wechat项目的新闻资讯类插件，
 
 4.在微信机器人聊天窗口输入#scanp 命令扫描新插件是否已添加至插件列表
 
-5.输入#help AIReport_txt查看帮助信息，返回以下信息则表示插件安装成功："输入“AI图文快讯”获取最新的图片格式AI日报。"
+5.输入#help AIReport_pic查看帮助信息，返回以下信息则表示插件安装成功："输入“AI早报”获取最新的图片格式AI日报。"
 
 ## 四. 使用样例
 ![example](https://github.com/user-attachments/assets/785cd57c-c304-4c60-92d8-ed75c59f0850)
 
-PS:手动修改AIReport_pic.py文件的第180行代码可自定义卡片下方的签名。
+PS:手动修改AIReport_pic.py文件的第188行代码可自定义卡片下方的签名。
