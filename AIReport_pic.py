@@ -1,8 +1,6 @@
 import os
 import json
 import requests
-import random
-import string
 from common.log import logger
 import plugins
 from bridge.context import ContextType
@@ -11,12 +9,14 @@ from plugins import *
 import config
 import asyncio
 from playwright.async_api import async_playwright
+from typing import List, Dict, Any
+from io import BytesIO
 
 @plugins.register(name="AIReport_pic",
-                  desc="获取图片格式的最新AI日报",
-                  version="2.0",
-                  author="Lingyuzhou",
-                  desire_priority=500)
+                 desc="获取图片格式的最新AI早报",
+                 version="2.0",
+                 author="Lingyuzhou",
+                 desire_priority=500)
 class AIReport_pic(Plugin):
     def __init__(self):
         super().__init__()
@@ -24,12 +24,12 @@ class AIReport_pic(Plugin):
         logger.info(f"[{__class__.__name__}] initialized")
 
     def get_help_text(self, **kwargs):
-        return "输入“AI图文快讯”获取最新的图片格式AI日报。"
+        return '输入"AI早报"获取最新的图片格式AI早报。'        
 
     def on_handle_context(self, e_context):
         if e_context['context'].type == ContextType.TEXT:
             content = e_context["context"].content.strip()
-            if content.startswith("AI图文快讯"):
+            if content.startswith("AI早报"):
                 logger.info(f"[{__class__.__name__}] 收到消息: {content}")
                 asyncio.run(self.fetch_ai_news(e_context))
 
@@ -70,10 +70,18 @@ class AIReport_pic(Plugin):
         html_content = self.generate_html(newslist)
         logger.debug(f"生成的HTML内容: {html_content[:6000]}...")
 
-        # 使用异步处理HTML渲染
-        await self.render_html_to_image(html_content, e_context)
+        # 发送正在生成中的消息
+        self.send_pending_reply(e_context)
+
+        # 直接渲染并发送图片
+        await self.render_and_send_image(html_content, e_context)
         logger.debug("[AIReport_pic] 卡片生成完成...")
 
+    def send_pending_reply(self, e_context):
+        """发送正在生成中的回复"""
+        e_context["reply"] = Reply(ReplyType.TEXT, "AI早报已生成~")
+        e_context.action = EventAction.BREAK_PASS
+        
     def generate_html(self, newslist):
         html_header = '''<!DOCTYPE html>
 <html lang="en">
@@ -208,39 +216,39 @@ body {
 
         return html_header + news_units + html_footer
 
-    async def render_html_to_image(self, html_content, e_context):
+    async def render_and_send_image(self, html_content, e_context):
         try:
             async with async_playwright() as p:
                 browser = await p.chromium.launch()
                 page = await browser.new_page()
                 await page.set_viewport_size({"width": 600, "height": 1380})
                 try:
-                    await page.set_content(html_content, timeout=60000)  # 设置超时为60秒
-                    img_content = await page.screenshot()
-                    logger.debug("[AIReport_pic] 图片生成成功")
-                    await self.send_image_to_wechat(img_content, e_context)
+                    await page.set_content(html_content, timeout=60000)
+                    # 直接获取截图数据
+                    screenshot_bytes = await page.screenshot()
+                    # 创建BytesIO对象
+                    image_io = BytesIO(screenshot_bytes)
+                    # 发送图片
+                    await self._send_img(e_context, image_io)
+                    logger.debug("[AIReport_pic] 图片生成并发送成功")
                 except Exception as e:
-                    logger.error(f"设置页面内容失败: {e}")
+                    logger.error(f"渲染页面失败: {e}")
+                    # 这里不再发送错误信息
                 finally:
                     await browser.close()
         except Exception as e:
             logger.error(f"HTML渲染为图片失败: {e}")
-            self.send_error_reply(e_context, "生成卡片失败，请稍后再试...")
+            # 这里不再发送错误信息
 
-    async def send_image_to_wechat(self, img_content, e_context):
-        """发送生成的图片到微信"""
-        from io import BytesIO
-        content_io = BytesIO(img_content)
-        await self._send_img(e_context, content_io)
-
-    async def _send_img(self, e_context, content_io):
-        reply = Reply(ReplyType.IMAGE, content_io)
+    async def _send_img(self, e_context, image_io):
+        """发送图片到微信"""
+        reply = Reply(ReplyType.IMAGE, image_io)
         channel = e_context["channel"]
         await channel.send(reply, e_context["context"])
 
     def send_error_reply(self, e_context, error_message):
         """发送错误回复"""
-        logger.error(error_message)  # Log the error message
+        logger.error(error_message)
         reply = Reply(ReplyType.ERROR, error_message)
         e_context["reply"] = reply
         e_context.action = EventAction.BREAK_PASS
