@@ -1,6 +1,5 @@
 import os
 import json
-import requests
 from common.log import logger
 import plugins
 from bridge.context import ContextType
@@ -24,7 +23,7 @@ class AIReport_pic(Plugin):
         logger.info(f"[{__class__.__name__}] initialized")
 
     def get_help_text(self, **kwargs):
-        return '输入"AI快讯"获取最新的图片今日AI快讯。'        
+        return '输入"AI快讯"获取图片格式的今日AI快讯。'        
 
     def on_handle_context(self, e_context):
         if e_context['context'].type == ContextType.TEXT:
@@ -79,7 +78,7 @@ class AIReport_pic(Plugin):
 
     def send_pending_reply(self, e_context):
         """发送正在生成中的回复"""
-        e_context["reply"] = Reply(ReplyType.TEXT, "图片已生成~")
+        e_context["reply"] = Reply(ReplyType.TEXT, "今日AI快讯已发送")
         e_context.action = EventAction.BREAK_PASS
         
     def generate_html(self, newslist):
