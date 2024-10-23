@@ -1,5 +1,6 @@
 import os
 import json
+import requests
 from common.log import logger
 import plugins
 from bridge.context import ContextType
