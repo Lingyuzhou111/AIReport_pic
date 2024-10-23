@@ -28,4 +28,4 @@ AIReport_pic是一款适用于chatgpt-on-wechat项目的新闻资讯类插件，
 ## 四. 使用样例
 ![example](https://github.com/user-attachments/assets/785cd57c-c304-4c60-92d8-ed75c59f0850)
 
-PS:手动修改AIReport_pic.py文件的第188行代码可自定义卡片下方的签名。
+PS:手动修改AIReport_pic.py文件的第187行代码可自定义卡片下方的签名。
